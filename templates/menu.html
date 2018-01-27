@@ -12,7 +12,12 @@
 </br>
 	Age: {{ i.age }}
 </br>
-</br>
+	<a href="{{url_for('editActor', movie_id = movie.id, actor_id = i.id)}}">Edit</a>
+	</br>
+	<a href="{{url_for('deleteActor', movie_id = movie.id, actor_id = i.id)}}">Delete</a>
+	</br>
+	</br>
 	{% endfor %}
+<a href = '{{url_for('newActor', movie_id = movie.id) }}'>Create New Actor</a>
 </body>
 </html>

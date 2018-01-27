@@ -5,11 +5,14 @@
 </head>
 <body>
 	<h1>Full Movie List</h1>
+	<a href = '{{url_for('newMovie') }}'>Create New Movie</a>
 </br>
 </br>
 	{% for i in movies %}
 	<h2>{{ i.name }}</h2>
-
+	<a href = "{{url_for('movieActors', movie_id = i.id) }}">View details</a>
+	</br>
+	</br>
 	{% endfor %}
 </body>
 </html>

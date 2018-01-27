@@ -1,5 +1,5 @@
 
-from flask import Flask, render_template 
+from flask import Flask, render_template, request, redirect, url_for 
 app = Flask(__name__) ### Instance of the Flask with name of the running application as an argument
 
 #################################################################################################
@@ -30,10 +30,28 @@ def movieActors(movie_id):
 	actors = session.query(Actor).filter_by(movie_id = movie.id)
 	return render_template('menu.html', movie = movie, actors = actors)
 
+@app.route('/movie/new/', methods=['GET','POST'])
+def newMovie():
+	if request.method == 'POST':
+		newMov = Movie(name=request.form['name'])
+		session.add(newMov)
+		session.commit()
+		return redirect(url_for('movieList'))
+	else:
+		return render_template('new_movie.html')
+
+
 # Task 1: Create route for newActor function here
-@app.route('/movie/<int:movie_id>/new/')
+@app.route('/movie/<int:movie_id>/new/', methods=['GET','POST'])
 def newActor(movie_id):
-	return "Page to create new Actor. Task 1 complete"
+	if request.method == 'POST':
+		newAct = Actor(name=request.form['name'], gender=request.form['gender'], \
+				age=request.form['age'], biography=request.form['bio'], movie_id=movie_id)
+		session.add(newAct)
+		session.commit()
+		return redirect(url_for('movieActors', movie_id=movie_id))
+	else:
+		return render_template('new_actor.html', movie_id=movie_id)
 
 # Task 2: Create route for editActor function here
 @app.route('/movie/<int:movie_id>/<int:actor_id>/edit/')

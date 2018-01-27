@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<h1>{{ movie.name }}</h1>
+	{% for i in actors %}
+	{{ i.name }}
+</br>
+	{{ i.biography }}
+</br>
+	{{ i.age }}
+</br>
+	{% endfor %}
+</body>
+</html>

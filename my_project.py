@@ -1,7 +1,9 @@
+
 from flask import Flask, render_template 
 app = Flask(__name__) ### Instance of the Flask with name of the running application as an argument
 
 #################################################################################################
+# Adding database to Flask application
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -14,20 +16,18 @@ DBSession = sessionmaker(bind = engine)
 session = DBSession()
 
 #################################################################################################
+
 @app.route('/')
-@app.route('/movies/<int:movie_id>/')
+@app.route('/movies')
+def movieList():
+	movies = session.query(Movie).all()
+	return render_template('full_movie_list.html', movies = movies)
+
+
+@app.route('/movie/<int:movie_id>/')
 def movieActors(movie_id):
 	movie = session.query(Movie).filter_by(id = movie_id).one()
 	actors = session.query(Actor).filter_by(movie_id = movie.id)
-
-	# output = ''
-	# for i in actors:
-	# 	output += i.name
-	# 	output += '</br>'
-	# 	output += str(i.age) 
-	# 	output += '</br>'
-	# 	output += i.biography
-	# 	output += '</br></br>'
 	return render_template('menu.html', movie = movie, actors = actors)
 
 # Task 1: Create route for newActor function here
@@ -44,6 +44,8 @@ def editActor(movie_id, actor_id):
 @app.route('/movie/<int:movie_id>/<int:actor_id>/delete/')
 def deleteActor(movie_id, actor_id):
 	return "Page to delete new Actor. Task 3 complete"
+
+
 
 if __name__ == '__main__':
 	app.debug = True

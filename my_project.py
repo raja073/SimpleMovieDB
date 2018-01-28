@@ -54,14 +54,28 @@ def newActor(movie_id):
 		return render_template('new_actor.html', movie_id=movie_id)
 
 # Task 2: Create route for editActor function here
-@app.route('/movie/<int:movie_id>/<int:actor_id>/edit/')
+@app.route('/movie/<int:movie_id>/<int:actor_id>/edit/', methods=['GET','POST'])
 def editActor(movie_id, actor_id):
-	return "Page to edit new Actor. Task 2 complete"
+	editedActor = session.query(Actor).filter_by(id=actor_id).one()
+	if request.method == 'POST':
+		if request.form['name']:
+			editedActor.name = request.form['name']
+			session.add(editedActor)
+			session.commit()
+			return redirect(url_for('movieActors', movie_id=movie_id))
+	else:
+		return render_template('edit_actors.html', movie_id=movie_id, actor_id=actor_id, i=editedActor)
 
 # Task 3: Create route for deleteActor function here
-@app.route('/movie/<int:movie_id>/<int:actor_id>/delete/')
+@app.route('/movie/<int:movie_id>/<int:actor_id>/delete/', methods=['GET','POST'])
 def deleteActor(movie_id, actor_id):
-	return "Page to delete new Actor. Task 3 complete"
+	actorToDelete = session.query(Actor).filter_by(id=actor_id).one()
+	if request.method == 'POST':
+		session.delete(actorToDelete)
+		session.commit()
+		return redirect(url_for('movieActors', movie_id=movie_id))
+	else:
+		return render_template('delete_actor.html', i=actorToDelete)
 
 
 
